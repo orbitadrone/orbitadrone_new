@@ -153,10 +153,18 @@ export default function MapScreen() {
   const performSearch = async () => {
     if (!searchText) return;
     setIsSearchModalVisible(false);
-    const nominatimUrl = `${NOMINATIM_API_URL}?q=${searchText}&format=json&limit=10&bounded=1&viewbox=${region.longitude - region.longitudeDelta / 2},${region.latitude - region.latitudeDelta / 2},${region.longitude + region.longitudeDelta / 2},${region.latitude + region.latitudeDelta / 2}`;
+    const nominatimUrl = `${NOMINATIM_API_URL}?q=${searchText}&format=json&limit=10&bounded=1&viewbox=${region.longitude - region.longitudeDelta / 2},${region.latitude - region.latitudeDelta / 2},${region.longitude + region.longitudeDelta / 2},${region.latitude + region.latitudeDelta / 2}&countrycodes=es`;
+    console.log("Nominatim URL:", nominatimUrl); // Log de la URL
     try {
       const response = await fetch(nominatimUrl, { headers: { 'User-Agent': 'OrbitadroneApp/1.0' } });
+      console.log("Nominatim Response Status:", response.status); // Log del estado de la respuesta
+      if (!response.ok) {
+        console.error("Nominatim Response not OK:", await response.text()); // Log del cuerpo de la respuesta si no es OK
+        Alert.alert("Error de búsqueda", "No se pudo obtener resultados de búsqueda. Inténtalo de nuevo.");
+        return;
+      }
       const data = await response.json();
+      console.log("Nominatim Data:", data); // Log de los datos recibidos
       if (data && data.length > 0) {
         const newPois = data.map(item => ({
           coordinate: { latitude: parseFloat(item.lat), longitude: parseFloat(item.lon) },
@@ -164,6 +172,17 @@ export default function MapScreen() {
           description: item.type,
         }));
         setSearchPois(newPois);
+        if (newPois.length > 0) {
+          const firstPoi = newPois[0];
+          setRegion(prevRegion => ({
+            ...prevRegion,
+            latitude: firstPoi.coordinate.latitude,
+            longitude: firstPoi.coordinate.longitude,
+            latitudeDelta: 0.0922, // Mantener un zoom similar al inicial
+            longitudeDelta: 0.0421, // Mantener un zoom similar al inicial
+          }));
+          console.log("Nueva región del mapa establecida:", firstPoi.coordinate);
+        }
         console.log("searchPois establecido después de la búsqueda:", newPois.length, "elementos.");
       } else {
         setSearchPois([]);
@@ -171,6 +190,7 @@ export default function MapScreen() {
       }
     } catch (error) {
       console.error("Error al buscar en Nominatim:", error);
+      Alert.alert("Error de conexión", "No se pudo conectar con el servicio de búsqueda. Verifica tu conexión a internet.");
     }
   };
   // --- Fin Lógica de Búsqueda ---
@@ -206,6 +226,7 @@ export default function MapScreen() {
           />
         ))}
         {selectedCoordinate && <Marker coordinate={selectedCoordinate} pinColor="green" />}
+        {console.log("Rendering searchPois:", searchPois.length, "items.", searchPois[0])}
         {searchPois.map((poi, index) => (
           <Marker
             key={`search-poi-${index}`}
