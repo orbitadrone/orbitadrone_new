@@ -51,6 +51,12 @@ export default function MapScreen() {
   const [showAirspaceZones, setShowAirspaceZones] = useState(true); // Por defecto, mostrar zonas ENAIRE
   const [mapType, setMapType] = useState('standard'); // Por defecto, mapa estándar
 
+  const handleClearSearchedLocations = () => {
+    console.log("Antes de limpiar: searchPois.length =", searchPois.length);
+    setSearchPois([]); // Limpia las ubicaciones de búsqueda reales
+    console.log("Después de limpiar: searchPois.length =", searchPois.length); // Nota: Esto puede mostrar el valor antiguo debido al cierre
+  };
+
   const NOMINATIM_API_URL = 'https://nominatim.openstreetmap.org/search';
 
   useEffect(() => {
@@ -71,11 +77,11 @@ export default function MapScreen() {
     })();
   }, []);
 
-  const handleMapPress = (event) => {
+  const handleMapPress = useCallback((event) => {
     const { coordinate } = event.nativeEvent;
     setSelectedCoordinate(coordinate);
     setSelectedZoneInfo(null);
-  };
+  }, []);
 
   const handleVuelaSeguro = async () => {
     if (!selectedCoordinate) {
@@ -158,8 +164,10 @@ export default function MapScreen() {
           description: item.type,
         }));
         setSearchPois(newPois);
+        console.log("searchPois establecido después de la búsqueda:", newPois.length, "elementos.");
       } else {
         setSearchPois([]);
+        console.log("No se encontraron resultados de búsqueda.");
       }
     } catch (error) {
       console.error("Error al buscar en Nominatim:", error);
@@ -254,20 +262,20 @@ export default function MapScreen() {
         <View style={styles.optionsPanel}>
           <Text style={styles.panelTitle}>Opciones del Punto</Text>
           <View style={styles.buttonRow}>
-            <CustomButton title="Vuela Seguro" onPress={handleVuelaSeguro} color={Colors.primary} />
-            <CustomButton title="Meteorología" onPress={handleMeteorologia} color={Colors.primary} />
-            <CustomButton title="Buscar en esta zona" onPress={handleSearchInArea} color={Colors.primary} />
+            <CustomButton title="Vuela Seguro" onPress={handleVuelaSeguro} color="#5FD9FF" />
+            <CustomButton title="Meteorología" onPress={handleMeteorologia} color="#5FD9FF" />
+            <CustomButton title="Buscar en esta zona" onPress={handleSearchInArea} color="#5FD9FF" />
           </View>
           <View style={styles.cancelButton}>
-            <CustomButton title="Cancelar" onPress={handleCancel} color={Colors.accent} />
+            <CustomButton title="Cancelar" onPress={handleCancel} color="#FF4F4F" />
           </View>
         </View>
       )}
 
       {airspaceZones && !isLoading && (
-        <View style={styles.clearButton}>
-          <CustomButton title="Limpiar Zonas" onPress={() => setAirspaceZones(null)} color={Colors.secondary} />
-        </View>
+        <TouchableOpacity style={styles.clearButton} onPress={() => setAirspaceZones(null)}>
+          <Text style={styles.clearButtonText}>Limpiar zonas ENAIRE</Text>
+        </TouchableOpacity>
       )}
 
       <Modal
@@ -322,18 +330,18 @@ export default function MapScreen() {
               onChangeText={setSearchText}
             />
             <View style={styles.buttonRow}>
-              <CustomButton title="Buscar" onPress={performSearch} color={Colors.primary} />
-              <CustomButton title="Cancelar" onPress={() => setIsSearchModalVisible(false)} color={Colors.accent} />
+              <CustomButton title="Buscar" onPress={performSearch} color="#5FD9FF" />
+              <CustomButton title="Cancelar" onPress={() => setIsSearchModalVisible(false)} color="#FF4F4F" />
             </View>
             <View style={styles.quickSearchButtons}>
               <Text style={styles.quickSearchTitle}>Búsquedas rápidas:</Text>
               <View style={styles.buttonRow}>
-                <CustomButton title="Restaurantes" onPress={() => { setSearchText('restaurantes'); performSearch(); }} color={Colors.secondary} />
-                <CustomButton title="Farmacias" onPress={() => { setSearchText('farmacias'); performSearch(); }} color={Colors.secondary} />
-                <CustomButton title="Gasolineras" onPress={() => { setSearchText('gasolineras'); performSearch(); }} color={Colors.secondary} />
-                <CustomButton title="Hoteles" onPress={() => { setSearchText('hoteles'); performSearch(); }} color={Colors.secondary} />
-                <CustomButton title="Camping" onPress={() => { setSearchText('camping'); performSearch(); }} color={Colors.secondary} />
-                <CustomButton title="Autocaravanas" onPress={() => { setSearchText('zona de autocaravanas'); performSearch(); }} color={Colors.secondary} />
+                <CustomButton title="Restaurantes" onPress={() => { setSearchText('restaurantes'); performSearch(); }} color="#5FFF69" />
+                <CustomButton title="Farmacias" onPress={() => { setSearchText('farmacias'); performSearch(); }} color="#5FFF69" />
+                <CustomButton title="Gasolineras" onPress={() => { setSearchText('gasolineras'); performSearch(); }} color="#5FFF69" />
+                <CustomButton title="Hoteles" onPress={() => { setSearchText('hoteles'); performSearch(); }} color="#5FFF69" />
+                <CustomButton title="Camping" onPress={() => { setSearchText('camping'); performSearch(); }} color="#5FFF69" />
+                <CustomButton title="Parking de autocaravanas" onPress={() => { setSearchText('zona de autocaravanas'); performSearch(); }} color="#5FFF69" />
               </View>
             </View>
           </View>
@@ -349,7 +357,7 @@ export default function MapScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.webViewModalContent}>
             <TouchableOpacity style={styles.closeButton} onPress={() => setIsWebViewModalVisible(false)}>
-              <Text style={styles.closeButtonText}>Cerrar</Text>
+              <MaterialCommunityIcons name="close" size={24} color="white" />
             </TouchableOpacity>
             {webViewUrl ? (
               <WebView 
@@ -367,6 +375,13 @@ export default function MapScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Botón Limpiar Búsqueda */}
+      {searchPois.length > 0 && (
+        <TouchableOpacity style={styles.clearSearchButtonContainer} onPress={handleClearSearchedLocations}>
+          <Text style={styles.clearButtonText}>Limpiar Búsqueda</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -389,7 +404,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(30, 30, 30, 0.4)',
     padding: 20,
     paddingBottom: 40, // Añadido para evitar superposición con botones de navegación
     borderTopLeftRadius: 30, // Más redondeado
@@ -416,9 +431,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 60,
     right: 10,
-    backgroundColor: 'white',
-    borderRadius: 5,
-    padding: 5,
+    backgroundColor: 'rgba(255, 255, 0, 0.5)',
+    borderRadius: 20,
+    padding: 10,
     elevation: 10,
   },
   modalContainer: {
@@ -430,7 +445,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '90%',
     maxHeight: '80%', // Restaurado
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(30, 30, 30, 0.4)',
     borderRadius: 10,
     padding: 20,
   },
@@ -438,21 +453,32 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: 'white',
   },
   modalScrollView: {
     flexGrow: 0,
   },
   zoneMessage: {
     marginBottom: 10,
+    color: 'white',
   },
   closeButton: {
-    marginTop: 20,
-    padding: 10,
-    borderRadius: 25, // Bordes más redondeados
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 20, // Para hacerlo circular
+    backgroundColor: '#FF4F4F', // Color rojo
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999, // Asegura que esté sobre el WebView
   },
   closeButtonText: {
+    // Este estilo ya no es necesario para el texto, pero lo mantengo por si acaso
     color: 'white',
     textAlign: 'center',
+    fontSize: 14,
   },
   modalOverlay: {
     flex: 1,
@@ -476,6 +502,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
+  webViewCloseButton: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    zIndex: 999,
+    padding: 5,
+    borderRadius: 15,
+    backgroundColor: 'lightgray',
+  },
   // Nuevos estilos para los botones de capa
   layerButtonsContainer: {
     position: 'absolute',
@@ -495,5 +530,20 @@ const styles = StyleSheet.create({
   layerButtonText: {
     marginLeft: 5,
     fontSize: 12,
+  },
+  clearSearchButtonContainer: {
+    position: 'absolute',
+    top: 120, // Posicionado debajo de Limpiar Zonas (60 + ~50 de altura + 10 de margen)
+    right: 10, // Alineado a la derecha con Limpiar Zonas
+    zIndex: 10, // Asegura que esté sobre el mapa y otros elementos
+    backgroundColor: 'rgba(255, 255, 0, 0.5)',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 10,
+  },
+  clearButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: Colors.textDark,
   },
 });

@@ -1,30 +1,36 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { StyleSheet, View, Text, Button } from 'react-native'; // Importa Button
+import CustomButton from '../components/CustomButton';
 
 export default function MapScreen() {
-  const initialRegion = {
-    latitude: 41.3851, // Ejemplo: Latitud de Barcelona
-    longitude: 2.1734, // Ejemplo: Longitud de Barcelona
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+  const handlePress = () => {
+    alert('¡Botón presionado!');
   };
 
   return (
     <View style={styles.container}>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        initialRegion={initialRegion}
-        showsUserLocation={true} // Muestra la ubicación actual del usuario
-      >
-        {/* Puedes añadir marcadores */}
-        <Marker
-          coordinate={{ latitude: 41.3851, longitude: 2.1734 }}
-          title="Mi Ubicación"
-          description="Aquí estoy!"
+      <Text style={styles.diagnosticText}>
+        Prueba de Visibilidad con Botón Nativo
+      </Text>
+
+      {/* Botón estándar de React Native */}
+      <View style={styles.nativeButtonContainer}>
+        <Button
+          title="Botón Nativo (¿Me ves?)"
+          onPress={handlePress}
+          color="#841584" // Un color distintivo
         />
-      </MapView>
+      </View>
+
+      {/* Tu CustomButton */}
+      <View style={styles.customButtonContainer}>
+        <CustomButton
+          title="CustomButton (¿Me ves?)"
+          onPress={handlePress}
+          color="#FF6347"
+          textColor="white"
+        />
+      </View>
     </View>
   );
 }
@@ -32,6 +38,27 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F0F8FF',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  map: { ...StyleSheet.absoluteFillObject },
+  diagnosticText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 40,
+    paddingHorizontal: 20,
+  },
+  nativeButtonContainer: {
+    margin: 20,
+    borderWidth: 2,
+    borderColor: 'purple',
+    padding: 10,
+  },
+  customButtonContainer: {
+    margin: 20,
+    borderWidth: 2,
+    borderColor: 'red',
+    padding: 10,
+  },
 });
