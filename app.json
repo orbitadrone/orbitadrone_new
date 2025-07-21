@@ -1,13 +1,12 @@
 {
   "expo": {
     "name": "orbitadrone",
-    "slug": "orbitadrone",
+    "slug": "orbitadrone-new",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "orbitadrone",
     "userInterfaceStyle": "automatic",
-
     "ios": {
       "supportsTablet": true
     },
@@ -20,7 +19,7 @@
       "googleServicesFile": "./google-services.json",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyC-IqHIVWif9CXsD4oQZ7BMlKIoWEw_luM"
+          "apiKey": "AIzaSyD09kiHpjajraMM8T0pM0QFXHEQHnebJM0"
         }
       }
     },
@@ -47,7 +46,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "7c7b58c5-e9fc-4693-9cde-06299ea30c81"
+        "projectId": "3c34b331-535c-40cf-bb8c-af86b8d281f9"
       }
     }
   }
