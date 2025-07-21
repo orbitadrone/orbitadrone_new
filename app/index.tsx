@@ -77,6 +77,10 @@ export default function MapScreen() {
     })();
   }, []);
 
+  useEffect(() => {
+    console.log("Current Map Region:", region);
+  }, [region]);
+
   const handleMapPress = useCallback((event) => {
     const { coordinate } = event.nativeEvent;
     setSelectedCoordinate(coordinate);
@@ -154,7 +158,7 @@ export default function MapScreen() {
     if (!searchText) return;
     setIsSearchModalVisible(false);
     const nominatimUrl = `${NOMINATIM_API_URL}?q=${searchText}&format=json&limit=10&bounded=1&viewbox=${region.longitude - region.longitudeDelta / 2},${region.latitude - region.latitudeDelta / 2},${region.longitude + region.longitudeDelta / 2},${region.latitude + region.latitudeDelta / 2}&countrycodes=es`;
-    console.log("Nominatim URL:", nominatimUrl); // Log de la URL
+    console.log("Nominatim URL (simplified):", nominatimUrl); // Log de la URL simplificada
     try {
       const response = await fetch(nominatimUrl, { headers: { 'User-Agent': 'OrbitadroneApp/1.0' } });
       console.log("Nominatim Response Status:", response.status); // Log del estado de la respuesta
