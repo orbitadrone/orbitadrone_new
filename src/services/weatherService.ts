@@ -1,5 +1,4 @@
-const API_KEY = '01ebf6bdb6363d97f8654534b1eace41'
-; // ¡Reemplaza con tu clave API real!
+// ¡Reemplaza con tu clave API real!
 const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/forecast'; // Cambiado a endpoint de predicción
 
 export const fetchWeatherForecast = async (latitude: number, longitude: number) => {

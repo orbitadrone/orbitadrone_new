@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "791130159272",
-    "project_id": "orbitadroneapp",
-    "storage_bucket": "orbitadroneapp.firebasestorage.app"
+    "project_number": "254703746068",
+    "project_id": "orbitadrone-84049",
+    "storage_bucket": "orbitadrone-84049.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:791130159272:android:fd8b82769b0666d1d6ea9d",
+        "mobilesdk_app_id": "1:254703746068:android:f31a3b9e2739e1933a3b01",
         "android_client_info": {
           "package_name": "com.orbitadrone"
         }
@@ -15,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDhzb64ffNCA26iEKAhturQBxMK36GYwYo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:791130159272:android:10768363de167cd7d6ea9d",
-        "android_client_info": {
-          "package_name": "com.orbitadroneapp"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDhzb64ffNCA26iEKAhturQBxMK36GYwYo"
+          "current_key": "AIzaSyD-ZNmduYxo3emVqWRDZzOdLcXtMAkXWrs"
         }
       ],
       "services": {

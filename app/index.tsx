@@ -1,9 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, View, Alert, Text, ActivityIndicator, Modal, TouchableOpacity, ScrollView, TextInput } from 'react-native';
-import * as Location from 'expo-location';
-import MapView, { Marker, Geojson } from 'react-native-maps';
-import WeatherDisplay from '../components/WeatherDisplay';
-import { WebView } from 'react-native-webview';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'; // Importar iconos
 import CustomButton from '../components/CustomButton';
 import { Colors } from '../constants/Colors';
@@ -23,6 +18,7 @@ const getZoneStyle = (zone) => {
 };
 
 export default function MapScreen() {
+
   const [selectedCoordinate, setSelectedCoordinate] = useState(null);
   const [region, setRegion] = useState({
     latitude: 41.3851,

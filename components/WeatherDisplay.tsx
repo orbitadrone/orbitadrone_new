@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { fetchWeatherForecast } from '../src/services/weatherService';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import CustomButton from './CustomButton';
@@ -40,12 +39,20 @@ interface ForecastItem {
     humidity: number;
     temp_kf: number;
   };
+<<<<<<< HEAD
   weather: {
+=======
+  weather: Array<{
+>>>>>>> df59862848e936bc23678f7b5b5b037ca0b92bd9
     id: number;
     main: string;
     description: string;
     icon: string;
+<<<<<<< HEAD
   }[];
+=======
+  }>;
+>>>>>>> df59862848e936bc23678f7b5b5b037ca0b92bd9
   clouds: {
     all: number;
   };
